@@ -22,12 +22,15 @@ async fn func(value: Value, _: Context) -> Result<impl serde::Serialize, !> {
         .flatten()
     {
         match path {
-            "test" => {
+            "test" | "oversigt" => {
                 return Ok(json!({
                     "statusCode": u16::from(http::StatusCode::OK),
-                    "body": "Dette er en test",
+                    "headers": {
+                        "content-type": "text/html"
+                    },
+                    "body": include_str!("oversigt.html"),
                     "isBase64Encoded": false
-                }))
+                }));
             }
             "dispensation" | "d" => {
                 return Ok(json!({
@@ -39,7 +42,7 @@ async fn func(value: Value, _: Context) -> Result<impl serde::Serialize, !> {
                     "isBase64Encoded": false
                 }))
             }
-            "toast" => {
+            s if s.starts_with("toast") => {
                 if rand::random::<u8>() <= 25 {
                     return Ok(json!({
                         "statusCode": u16::from(http::StatusCode::OK),
