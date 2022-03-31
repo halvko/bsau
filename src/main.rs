@@ -39,6 +39,36 @@ async fn func(value: Value, _: Context) -> Result<impl serde::Serialize, !> {
                     "isBase64Encoded": false
                 }))
             }
+            "toast" => {
+                if rand::random::<u8>() <= 25 {
+                    return Ok(json!({
+                        "statusCode": u16::from(http::StatusCode::OK),
+                        "headers": {
+                            "content-type": "text/html"
+                        },
+                        "body": include_str!("bamboozeld.html"),
+                        "isBase64Encoded": false
+                    }));
+                }
+                return Ok(json!({
+                    "statusCode": u16::from(http::StatusCode::FOUND),
+                    "headers": {
+                        "location": "https://bamboozle.academy"
+                    },
+                    "body": "Redirecting...",
+                    "isBase64Encoded": false
+                }));
+            }
+            "rc" | "regnecentralen" | "hovedkontor" => {
+                return Ok(json!({
+                    "statusCode": u16::from(http::StatusCode::FOUND),
+                    "headers": {
+                        "location": "https://www.facebook.com/groups/regnecentralen.au"
+                    },
+                    "body": "Redirecting...",
+                    "isBase64Encoded": false
+                }))
+            }
             _ => (),
         }
     }
